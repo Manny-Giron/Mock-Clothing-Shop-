@@ -83,7 +83,7 @@ const styles = {
         padding: '0.5rem',
         transition: 'border-bottom 0.2s ease',
     },
-    // FIX THE GRIDBOX ; ITS NOT SHOWING FULL HEIGHT
+    // FIX THE GRIDBOX ; ITS NOT SHOWING FULL HEIGHTç
     SearchContainer: {
         display: 'flex',
         height: '40%',
