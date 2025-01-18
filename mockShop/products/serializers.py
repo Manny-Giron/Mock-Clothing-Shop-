@@ -14,7 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductsSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True)  
-    photos = PhotosSerializer(many=True, source='photos') 
+    photos = PhotosSerializer(many=True) 
 
     class Meta:
         model = Products
