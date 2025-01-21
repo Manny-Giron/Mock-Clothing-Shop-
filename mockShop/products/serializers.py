@@ -13,8 +13,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class ProductsSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True)  
-    photos = PhotosSerializer(many=True) 
+    categories = CategorySerializer(many=True, required=False)
+    photos = PhotosSerializer(many=True, required=False)
 
     class Meta:
         model = Products
