@@ -63,3 +63,43 @@ class ProductCreateView(APIView):
 
         # Handle invalid serializer case
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductUpdateView(APIView):
+    def put(self, request, pk):
+        try: 
+            product = Products.objects.get(pk=pk)
+        except:
+            return Response({"error" : "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProductsSerializer(product, data=data, partial=True)
+        data = request.data
+        if serializer.is_valid():
+            product = product.serializer.save()
+            
+            categories_names = data.get("categories", [])
+            photos_urls = data.get("photos", [])
+            
+            # Add categories
+            if categories_names:
+                new_categories = Category.objects.filter(name__in=categories_names)
+                product.categories.set(new_categories)
+                print(f"Updated Categories: {new_categories}")
+            
+            # Remove current photo linked then add new photos
+            product.photos.all().delete()
+            for url in photos_urls:
+                Photos.objects.create(product=product, image_url=url)
+                print(f"Added new image url: {url}")
+            
+            return Response(ProductsSerializer(product).data, status=status.HTTP_200_OK)    
+        else:
+            return Response({"error" : "Serializer not valid"}, status=status.HTTP_404_NOT_FOUND)
+        
+class ProductRemoveView(APIView):
+    def put(self, request, pk):
+        try:
+            product = Products.objects.get(pk=pk)
+            product.delete()
+            return Response({"Successfully deleted product"}, status=status.HTTP_200_OK)
+        except:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
