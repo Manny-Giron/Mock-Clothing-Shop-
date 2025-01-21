@@ -34,9 +34,9 @@ const Home = () => {
             <Navbar />
             <div>
                 <h1>Products</h1>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", width: '100vw', }}>
                     {products.map((product) => (
-                        <div key={product.id} style={{ padding: ".25rem" }}>
+                        <div key={product.id} style={{ padding: ".25rem", width: '15vw', }}>
                             {/* Check if photos exist and render the first image */}
                             {product.photos && product.photos.length > 0 ? (
                                 <img

@@ -37,10 +37,10 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div>
+        <div style={styles.mainContainer}>
             <h1>Admin Dashboard</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
+            <form onSubmit={handleSubmit} style={styles.createContainer}>
+                <label style={styles.formInputs}>
                     Product Name:
                     <input
                         type="text"
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
                         onChange={handleInputChange}
                     />
                 </label>
-                <label>
+                <label style={styles.formInputs}>
                     Description:
                     <textarea
                         name="description"
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
                         onChange={handleInputChange}
                     />
                 </label>
-                <label>
+                <label style={styles.formInputs}>
                     Price:
                     <input
                         type="number"
@@ -66,7 +66,7 @@ const AdminDashboard = () => {
                         onChange={handleInputChange}
                     />
                 </label>
-                <label>
+                <label style={styles.formInputs}>
                     Categories (comma-separated):
                     <input
                         type="text"
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
                         onChange={handleInputChange}
                     />
                 </label>
-                <label>
+                <label style={styles.formInputs}>
                     Photos (comma-separated URLs):
                     <input
                         type="text"
@@ -83,11 +83,38 @@ const AdminDashboard = () => {
                         value={newProduct.photos}
                         onChange={handleInputChange}
                     />
-                </label>
+                </label >
                 <button type="submit">Create Product</button>
             </form>
         </div>
     );
+};
+
+const styles = {
+
+    mainContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+    },
+    createContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: '1rem',
+        width: '20vw',
+        borderRadius: '0.2rem',
+        boxShadow: '0px 0px 10px 2px rgba(0, 0, 0, 0.1)',
+
+    },
+    formInputs: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+
+
 };
 
 export default AdminDashboard;
