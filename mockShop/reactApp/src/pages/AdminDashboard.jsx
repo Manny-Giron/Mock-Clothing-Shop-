@@ -1,120 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ProductCreateForm from "../components/ProductCreateForm";
+import ProductEditForm from "../components/ProductEditForm";
 
 const AdminDashboard = () => {
-    const [newProduct, setNewProduct] = useState({
-        name: "",
-        description: "",
-        price: "",
-        categories: "",
-        photos: "",
-    });
+    const [products, setProducts] = useState([]);
+    const [editProductId, setEditProductId] = useState(null);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewProduct({ ...newProduct, [name]: value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch("http://127.0.0.1:8000/api/products/create/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newProduct),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    // Fetch products on component mount
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/products/");
+                if (!response.ok) throw new Error(`Error: ${response.status}`);
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
             }
+        };
 
-            const data = await response.json();
-            console.log("Product created successfully:", data);
-        } catch (error) {
-            console.error("Error creating product:", error.message);
-        }
-    };
+        fetchProducts();
+    }, []);
 
     return (
-        <div style={styles.mainContainer}>
-            <h1>Admin Dashboard</h1>
-            <form onSubmit={handleSubmit} style={styles.createContainer}>
-                <label style={styles.formInputs}>
-                    Product Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={newProduct.name}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={styles.formInputs}>
-                    Description:
-                    <textarea
-                        name="description"
-                        value={newProduct.description}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={styles.formInputs}>
-                    Price:
-                    <input
-                        type="number"
-                        name="price"
-                        value={newProduct.price}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={styles.formInputs}>
-                    Categories (comma-separated):
-                    <input
-                        type="text"
-                        name="categories"
-                        value={newProduct.categories}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={styles.formInputs}>
-                    Photos (comma-separated URLs):
-                    <input
-                        type="text"
-                        name="photos"
-                        value={newProduct.photos}
-                        onChange={handleInputChange}
-                    />
-                </label >
-                <button type="submit">Create Product</button>
-            </form>
+        <div style={{ display: "flex", gap: "2rem" }}>
+            {/* Left Section: Product List */}
+            <div style={{ flex: 1 }}>
+                <h1>Admin Dashboard</h1>
+                <h2>Products</h2>
+                {products.length === 0 ? (
+                    <p>No products available</p>
+                ) : (
+                    <ul>
+                        {products.map((product) => (
+                            <li
+                                key={product.id}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setEditProductId(product.id)}
+                            >
+                                {product.name} - ${product.price}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
+            {/* Right Section: Forms */}
+            <div style={{ flex: 1 }}>
+                <ProductCreateForm />
+
+                <h2>Update Product</h2>
+                <ProductEditForm productId={editProductId} />
+            </div>
         </div>
     );
 };
 
-const styles = {
-
-    mainContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    createContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: '1rem',
-        padding: '1rem',
-        width: '20vw',
-        borderRadius: '0.2rem',
-        boxShadow: '0px 0px 10px 2px rgba(0, 0, 0, 0.1)',
-
-    },
-    formInputs: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-
-
-};
 
 export default AdminDashboard;
