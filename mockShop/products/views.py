@@ -71,8 +71,8 @@ class ProductUpdateView(APIView):
             product = Products.objects.get(pk=pk)
         except:
             return Response({"error" : "Product not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = ProductsSerializer(product, data=data, partial=True)
         data = request.data
+        serializer = ProductsSerializer(product, data=data, partial=True)
         if serializer.is_valid():
             product = product.serializer.save()
             
