@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from 'prop-types'; // Add this import
 
 const ProductEditForm = ({ productId }) => {
     const [formData, setFormData] = useState(null);
@@ -58,21 +59,20 @@ const ProductEditForm = ({ productId }) => {
 
     return (
         <div style={styles.container}>
-
             <form onSubmit={handleSubmit} style={styles.formContainer}>
                 <label style={styles.inputContainer}>
                     <div>Item #: {productId}</div>
                     Name:
                     <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
                 </label>
-                <label style={styles.inputContainer} >
+                <label style={styles.inputContainer}>
                     Description:
                     <textarea name="description" value={formData.description} onChange={handleInputChange} />
                 </label>
-                <label style={styles.inputContainer} >
+                <label style={styles.inputContainer}>
                     Price:
                     <input type="number" name="price" value={formData.price} onChange={handleInputChange} />
-                </label >
+                </label>
                 <label style={styles.inputContainer}>
                     Categories (comma-separated):
                     <input
@@ -96,6 +96,12 @@ const ProductEditForm = ({ productId }) => {
         </div>
     );
 };
+
+// Add PropTypes validation (THANKS DEEPSEEK)
+ProductEditForm.propTypes = {
+    productId: PropTypes.string.isRequired,
+};
+
 const styles = {
     container: {
         borderRadius: '0.25rem',
@@ -111,7 +117,6 @@ const styles = {
     inputContainer: {
         padding: '0.5rem'
     }
-
-}
+};
 
 export default ProductEditForm;
