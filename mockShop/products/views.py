@@ -29,6 +29,7 @@ class ProductDetailView(APIView):
 
 class ProductCreateView(APIView):
     def post(self, request):
+        print("API CALL: Creating product")
         data = request.data
         # Convert price to a float if it exists
         if "price" in data:
@@ -67,17 +68,20 @@ class ProductCreateView(APIView):
 
 class ProductUpdateView(APIView):
     def put(self, request, pk):
+        print("API CALL: Updating product")
         try: 
             product = Products.objects.get(pk=pk)
         except:
             return Response({"error" : "Product not found"}, status=status.HTTP_404_NOT_FOUND)
         data = request.data
+        
+        categories_names = data.pop("categories", [])
+        photos_urls = data.pop("photos", [])
+        
         serializer = ProductsSerializer(product, data=data, partial=True)
         if serializer.is_valid():
-            product = product.serializer.save()
-            
-            categories_names = data.get("categories", [])
-            photos_urls = data.get("photos", [])
+            print("Serializer is valid")
+            product = serializer.save()
             
             # Add categories
             if categories_names:
@@ -93,6 +97,7 @@ class ProductUpdateView(APIView):
             
             return Response(ProductsSerializer(product).data, status=status.HTTP_200_OK)    
         else:
+            print("Serializer NOT valid")
             return Response({"error" : "Serializer not valid"}, status=status.HTTP_404_NOT_FOUND)
         
 class ProductRemoveView(APIView):
