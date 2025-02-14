@@ -31,7 +31,7 @@ const ProductCreateForm = () => {
             if (!response.ok) throw new Error(`Error: ${response.status}`);
             const data = await response.json();
             console.log("Product created:", data);
-            
+
         } catch (error) {
             console.error("Error creating product:", error);
         }

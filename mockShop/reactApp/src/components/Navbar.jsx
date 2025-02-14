@@ -89,13 +89,15 @@ const styles = {
         height: '40%',
     },
     Search: {
-        border: '2px solid black',
-        borderRadius: '0.1rem',
+        border: '2px solid rgb(0,0,0,0.4)',
+        paddingLeft: '1rem',
+        borderRadius: '1rem',
         height: '100%',
         maxWidth: '50vw',
         width: '20vw',
     },
     Cart: {
+        cursor: 'pointer',
         justifySelf: 'end',
         margin: '1rem',
         height: '1rem',
