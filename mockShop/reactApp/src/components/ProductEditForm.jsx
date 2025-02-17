@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'; // Add this import
 
-const ProductEditForm = ({ productId }) => {
+const ProductEditForm = ({ productId, fetchProducts }) => {
     const [formData, setFormData] = useState(null);
 
     useEffect(() => {
@@ -50,6 +50,7 @@ const ProductEditForm = ({ productId }) => {
             if (!response.ok) throw new Error(`Error: ${response.status}`);
             const data = await response.json();
             console.log("Product updated:", data);
+            fetchProducts();
         } catch (error) {
             console.error("Error updating product:", error);
         }
@@ -100,7 +101,9 @@ const ProductEditForm = ({ productId }) => {
 // Add PropTypes validation (THANKS DEEPSEEK)
 ProductEditForm.propTypes = {
     productId: PropTypes.string.isRequired,
+    fetchProducts: PropTypes.func.isRequired,
 };
+
 
 const styles = {
     container: {
