@@ -8,19 +8,18 @@ const AdminDashboard = () => {
     const [editProductId, setEditProductId] = useState(null);
     const [isHovered, setIsHovered] = useState(null);
 
-    // Fetch products on component mount
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch("http://127.0.0.1:8000/api/products/");
-                if (!response.ok) throw new Error(`Error: ${response.status}`);
-                const data = await response.json();
-                setProducts(data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            }
-        };
+    const fetchProducts = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/products/');
+            if (!response.ok) throw new Error('Failed to fetch products');
+            const data = await response.json();
+            setProducts(data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchProducts();
     }, []);
 
@@ -60,7 +59,10 @@ const AdminDashboard = () => {
                 <ProductCreateForm />
 
                 <h2>Update Product</h2>
-                <ProductEditForm productId={editProductId} />
+                <ProductEditForm
+                    productId={editProductId}
+                    fetchProducts={fetchProducts}
+                />
             </div>
         </div>
     );
