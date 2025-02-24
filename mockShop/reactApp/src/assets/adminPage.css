@@ -1,8 +1,81 @@
-.productCont {
-    justify-content: center;
-    box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
+.topEdge {
+    padding: 1vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Green */
+}
+
+.DashboardContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.LeftNavBar {
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+}
+
+.navBarItem {
+    padding: 0.5rem;
+    margin: 0.5rem;
     border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+}
+
+.navBarItem:hover {
+    background-color: #f6f6f6;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+}
+
+.navBarItem.selected {
+    background-color: #f3f3f3;
+    box-shadow: 5px 5px 6px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardTitle {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.CurrentView {
+    box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.3);
     padding: 1rem;
+    border-radius: 5px;
+    width: 100%;
+
+}
+
+.viewContainer {
+    max-height: 82vh;
+    min-height: 82vh;
+    overflow: scroll;
+}
+
+.productsSection {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    align-items: center;
+    /* box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.3);
+    */
+}
+
+.leftSection {
+    justify-content: center;
+    border-radius: 5px;
+    padding: 0 1rem;
+    flex: 1;
+    max-height: 74vh;
+    overflow: scroll;
+    border: 2px solid black;
+    padding: 1rem;
+    border-radius: 5px;
 }
 
 .productListCont {
@@ -13,9 +86,11 @@
 }
 
 .prodContainer {
+
     list-style: none;
     cursor: pointer;
-    border: 2px solid black;
+    /* box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3); 
+    */
     border-radius: 5px;
     padding: 1rem;
     margin: 1rem;
@@ -24,12 +99,14 @@
 }
 
 .prodContainer.hovered {
-    background-color: rgba(169, 169, 169, 0.3);
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
 }
 
+
 .prodContainer.selected {
-    background-color: rgba(169, 169, 169, 0.3);
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(169, 169, 169, 0.3);
+    */
+    box-shadow: 5px 5px 6px 3px rgba(0, 0, 0, 0.2);
 }
 
 .rightSection {
@@ -38,5 +115,5 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: 0 0 1rem 0;
 }
