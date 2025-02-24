@@ -1,70 +1,45 @@
-import { useState, useEffect } from "react";
-import ProductCreateForm from "../components/ProductCreateForm";
-import ProductEditForm from "../components/ProductEditForm";
+import { useState } from "react";
+import ProductPage from "../components/ProductsPage";
+import Categories from "../components/CategoriesForm";
 import "../assets/adminPage.css";
 
+// ALL CSS STYLES ARE IN adminPage.css !!!! 
+
 const AdminDashboard = () => {
-    const [products, setProducts] = useState([]);
-    const [editProductId, setEditProductId] = useState(null);
-    const [isHovered, setIsHovered] = useState(null);
+    const [sectionSelected, setSectionSelected] = useState("Products");
 
-    const fetchProducts = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/products/');
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const data = await response.json();
-            setProducts(data);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    return (
-        <div style={{ display: "flex", gap: "2rem" }}>
-            {/* Left Section: Product List */}
-            <div style={{ flex: 1 }}>
-                <h1>Admin Dashboard</h1>
-                <div className="productCont">
-                    <h2>Products</h2>
-                    <div className="prodListCont">
-                        {products.length === 0 ? (
-                            <p>No products available</p>
-                        ) : (
-                            <ul style={{ padding: 0 }}>
-                                {products.map((product) => (
-                                    <li
-                                        key={product.id}
-                                        className={`prodContainer 
-                    ${editProductId === product.id ? "selected" : ""} 
-                    ${isHovered === product.id && editProductId !== product.id ? "hovered" : ""}`}
-                                        onClick={() => setEditProductId(product.id)}
-                                        onMouseEnter={() => setIsHovered(product.id)}
-                                        onMouseLeave={() => setIsHovered(null)}
-                                    >
-                                        {product.name} - ${product.price}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
+    return (<main>
+        <div className="topEdge"></div>
+        <div className="DashboardContainer">
+            <div className="LeftNavBar">
+                <div>
+                    <h1 className="dashboardTitle">Admin Dashboard</h1>
                 </div>
+
+                <div
+                    id="Products"
+                    className={`navBarItem 
+                    ${sectionSelected === "Products" ? 'selected' : ''}`}
+                    onClick={() => {
+                        setSectionSelected("Products");
+                    }}
+                >Products</div>
+                <div
+                    id="Categories"
+                    className={`navBarItem 
+                    ${sectionSelected === "Categories" ? 'selected' : ''}`}
+                    onClick={() => {
+                        setSectionSelected("Categories");
+                    }}
+                >Categories</div>
             </div>
 
-            {/* Right Section: Forms */}
-            <div className="rightSection">
-                <ProductCreateForm />
-
-                <h2>Update Product</h2>
-                <ProductEditForm
-                    productId={editProductId}
-                    fetchProducts={fetchProducts}
-                />
+            <div className="CurrentView">
+                {sectionSelected === "Products" ? <ProductPage /> : null}
+                {sectionSelected === "Categories" ? <Categories /> : null}
             </div>
         </div>
+    </main>
     );
 };
 
