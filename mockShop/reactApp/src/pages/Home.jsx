@@ -39,7 +39,7 @@ const Home = () => {
                 <div className="productsContainer">
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", margin: "10px 1px", }}>
                         {products.map((product) => (
-                            <div className="product" key={product.id} style={{ padding: ".5rem", width: '25vw', }} onClick={() => navigate(`/product/${product.id}`, '_blank')}>
+                            <div className="product" key={product.id} style={{ padding: ".2rem", width: '25vw', }} onClick={() => navigate(`/product/${product.id}`, '_blank')}>
                                 {/* Check if photos exist and render the first image */}
                                 {product.photos && product.photos.length > 0 ? (
                                     <img
@@ -51,7 +51,6 @@ const Home = () => {
                                     <p>No image available</p>
                                 )}
                                 <h2>{product.name}</h2>
-                                <p>{product.description}</p>
                                 <p>${product.price}</p>
 
                             </div>
