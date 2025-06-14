@@ -1,13 +1,24 @@
 from django.db import models
 
+# class Photos(models.Model):
+#     product = models.ForeignKey(
+#         'Products',
+#         on_delete=models.CASCADE, 
+#         related_name='photos'
+#         # Links each photo to a specific product
+#     )  
+#     image_url = models.URLField()
+
+#     def __str__(self):
+#         return self.image_url
+
 class Photos(models.Model):
     product = models.ForeignKey(
         'Products',
         on_delete=models.CASCADE, 
         related_name='photos'
-        # Links each photo to a specific product
     )  
-    image_url = models.URLField()
+    image_url = models.ImageField()
 
     def __str__(self):
         return self.image_url
