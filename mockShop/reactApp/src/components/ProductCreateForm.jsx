@@ -81,7 +81,7 @@ const ProductCreateForm = ({ fetchProducts, setIsCreating }) => {
                                 placeholder="Description"
                                 name="description"
                                 value={formData.description}
-                                onChange={{ handleInputChange }} />
+                                onChange={handleInputChange} />
                         </label>
                         <label style={styles.inputContainer}>
                             <input

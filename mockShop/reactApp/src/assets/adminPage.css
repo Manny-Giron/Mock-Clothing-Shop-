@@ -1,3 +1,54 @@
+.dashboard {
+    transition: ease 0.3s, color 0.3s ease;
+}
+
+.dashboard.light {
+    background-color: #f3f3f3;
+    color: #000;
+
+    h1 {
+        color: #000;
+    }
+}
+
+.dashboard.dark {
+    background-color: #151515;
+    color: #f3f3f3;
+
+    h1 {
+        color: #f3f3f3;
+    }
+}
+
+.themeToggle {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.themeToggle p {
+    font-size: .65rem;
+    font-weight: 300;
+}
+
+.themToggleButton {
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+    background-color: #1c1c1c;
+    color: #f3f3f3;
+    font-weight: 700;
+}
+
+body {
+    font-family: "Space Mono", monospace;
+}
+
 .topEdge {
     padding: 1vh;
     top: 0;
@@ -14,6 +65,7 @@
 .LeftNavBar {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 0.25rem;
 }
 
@@ -28,11 +80,13 @@
 .navBarItem:hover {
     background-color: #f6f6f6;
     box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+    transition: 0.25s;
 }
 
 .navBarItem.selected {
     background-color: #f3f3f3;
-    box-shadow: 5px 5px 6px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.14);
+    transition: 0.4s;
 }
 
 .dashboardTitle {
@@ -45,13 +99,15 @@
 
 .CurrentView {
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.3);
-    padding: 1rem;
     border-radius: 5px;
     width: 100%;
-
+    height: 850px;
+    padding-bottom: 5px;
+    overflow: scroll;
 }
 
 .viewContainer {
+    padding: 1rem;
     max-height: 82vh;
     min-height: 82vh;
     overflow: scroll;
@@ -62,20 +118,36 @@
     gap: 1rem;
     flex-direction: row;
     align-items: center;
-    /* box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.3);
-    */
+
 }
 
 .leftSection {
+    margin: 2rem 0 0 2rem;
     justify-content: center;
     border-radius: 5px;
     padding: 0 1rem;
     flex: 1;
     max-height: 74vh;
     overflow: scroll;
-    border: 2px solid black;
+    box-shadow: 1px 1px 5px 4px rgb(0, 0, 0, 0.1);
     padding: 1rem;
     border-radius: 5px;
+}
+
+.LogoutButton {
+    background-color: #f3f3f3;
+    color: #000;
+    font-weight: 700;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+}
+
+.LogoutButton:hover {
+    background-color: #d5d5d5;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+    transition: 0.2s;
 }
 
 .productListCont {
@@ -86,11 +158,10 @@
 }
 
 .prodContainer {
-
+    display: flex;
     list-style: none;
     cursor: pointer;
-    /* box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3); 
-    */
+    box-shadow: 1px 1px 5px 1px rgb(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 1rem;
     margin: 1rem;
@@ -99,7 +170,7 @@
 }
 
 .prodContainer.hovered {
-    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 3px 3px 8px 5px rgba(0, 0, 0, 0.16);
 }
 
 
@@ -116,4 +187,16 @@
     justify-content: center;
     align-items: center;
     padding: 0 0 1rem 0;
+}
+
+.catLi {
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.1rem;
+    margin: 0.5rem 0;
+    transition: 0.25s;
+}
+
+.catLi:hover {
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
 }

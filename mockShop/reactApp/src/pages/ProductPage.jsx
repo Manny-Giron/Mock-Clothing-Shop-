@@ -31,6 +31,8 @@ const ProductPage = () => {
         ...(hoverAddProd ? { backgroundColor: 'black', color: 'white' } : {}),
     });
 
+
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {

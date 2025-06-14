@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 const CategoriesForm = () => {
     // const [formData, setFormData] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [error, setError] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
     });
@@ -18,9 +19,11 @@ const CategoriesForm = () => {
             const data = await response.json();
             setCategories(data);
             console.log("Categories fetched successfully");
+            setError(false);
         }
         catch {
             console.log("Failed to fetch Categories (Admin Page)");
+            setError(true);
             return;
         };
 
@@ -57,6 +60,7 @@ const CategoriesForm = () => {
                 }),
             })
             if (!response.ok) {
+                setError(true);
                 throw new Error("Failed to add category.");
             }
             else {
@@ -78,6 +82,10 @@ const CategoriesForm = () => {
             <div>
                 <h2 style={styles.h2}>Categories</h2>
             </div>
+            <div className="errorMessage"
+                style={{ position: 'fixed', display: error ? 'block' : 'none', color: 'red', textAlign: 'center' }}>
+                Error Fetching Categories, Try Again
+            </div>
             <div className="UpperSection" style={{ display: "flex", justifyContent: "center" }}>
                 <div className="topEdgeRow" style={styles.topEdgeRow}>
                     <input
@@ -93,7 +101,6 @@ const CategoriesForm = () => {
                         onClick={() => { handleAddCategory(formData) }
                         }>Add Category</button>
                 </div>
-
             </div>
             <div className="viewContainer" style={styles.container}>
                 {categories.map((category) => (
