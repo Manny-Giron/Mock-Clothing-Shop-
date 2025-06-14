@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
     
 # Shows how 'Photos' are displayed in the admin
 class PhotosAdmin(admin.ModelAdmin):
-    list_display = ('id', 'product', 'image_url')  
+    list_display = ('id', 'product')  
     list_filter = ('product',)                     
     search_fields = ('product__name',)            
 

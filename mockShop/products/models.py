@@ -1,16 +1,5 @@
 from django.db import models
 
-# class Photos(models.Model):
-#     product = models.ForeignKey(
-#         'Products',
-#         on_delete=models.CASCADE, 
-#         related_name='photos'
-#     )  
-#     image_url = models.URLField()
-
-#     def __str__(self):
-#         return self.image_url
-
 class Photos(models.Model):
     image = models.ImageField(upload_to='product_photos/')
     product = models.ForeignKey(
@@ -18,6 +7,7 @@ class Photos(models.Model):
         on_delete=models.CASCADE,
         related_name='photos'
     )
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
