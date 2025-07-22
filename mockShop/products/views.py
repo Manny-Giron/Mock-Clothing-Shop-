@@ -1,10 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Products
 from .serializers import ProductsSerializer, CategorySerializer
 from .models import Products, Category, Photos
 from decimal import Decimal
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 
 # View for all products
@@ -109,3 +112,28 @@ class RemoveCategory(APIView):
             return Response({"Successfully deleted category"}, status=status.HTTP_200_OK)
         except:
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class MultiplePhotosUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+    def post(self, request):
+        print("API CALL: Attempting to upload multiple photos")
+        print("API CALL: Attempting to upload multiple photos")
+        print("Content-Type:", request.content_type)
+        print("DATA:", request.data)
+        print("FILES:", request.FILES)
+        product_id = request.data.get('product')
+        print("1. ")
+        images = request.FILES.getlist('image')
+        print("2. ")
+        try:
+            product = Products.objects.get(id=product_id)
+        except Products.DoesNotExist:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        photo_ids = []
+        for img in images:
+            photo = Photos.objects.create(product=product, image=img)
+            photo_ids.append(photo.id)
+
+        return Response({"message": "Photos uploaded successfully", "photo_ids": photo_ids}, status=status.HTTP_201_CREATED)
