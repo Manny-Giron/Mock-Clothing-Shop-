@@ -2,32 +2,47 @@ import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 
 const ProductEditForm = ({ productId, fetchProducts, setUpdateOk, categories }) => {
-    const [formData, setFormData] = useState(null);
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        price: [],
+        categories: [],
+    });
+    const [photos, setPhotos] = useState([]);
+    const [photoPreview, setPhotoPreview] = useState(null);
+
     useEffect(() => {
         if (!productId) {
             setFormData(null);
             return;
         }
         else {
+
             const fetchProduct = async () => {
+
                 try {
                     const response = await fetch(`http://127.0.0.1:8000/api/products/${productId}/`);
                     if (!response.ok) throw new Error(`Error: ${response.status}`);
                     const data = await response.json();
                     console.log("Product Data:", data);
+                    const categoryObjects = categories.filter(cat => data.categories.includes(cat.id));
                     setFormData({
                         name: data.name,
                         description: data.description,
                         price: data.price,
-                        categories: data.categories.map((c) => c.name).join(", "),
-                        photos: data.photos.map((p) => p.image_url).join(", "),
+                        categories: categoryObjects,
                     });
+                    const imageUrl =
+                        data.photos && data.photos.length > 0
+                            ? data.photos[0].image  // or data.photos[0].image_url depending on your API
+                            : null;
+
+                    setPhotoPreview(imageUrl);
+                    console.log(imageUrl)
                     console.log('Form Data:', {
                         name: data.name,
                         description: data.description,
                         price: data.price,
-                        categories: data.categories.map((c) => c.name).join(", "),
-                        photos: data.photos.map((p) => p.image_url).join(", "),
                     });
                 } catch (error) {
                     console.error("Error fetching product:", error);
@@ -44,38 +59,70 @@ const ProductEditForm = ({ productId, fetchProducts, setUpdateOk, categories }) 
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    const handleCategoryDelete = (value) => {
-        console.log('Deleted Category:', value);
-        const updatedCategories = formData.categories
-            .split(",")
-            .filter((category) => category.trim() !== value)
-            .join(", ");
-        setFormData({ ...formData, ['categories']: updatedCategories });
+    const handleCategoryDelete = (categoryId) => {
+        setFormData(prev => ({
+            ...prev,
+            categories: prev.categories.filter(cat => cat.id !== categoryId)
+        }));
     };
-    const handleAddCategory = (categoryToAdd) => {
-        if (!categoryToAdd || formData.categories.includes(categoryToAdd)) return;
 
-        const updatedCategories = formData.categories
-            ? formData.categories.split(",").concat(categoryToAdd).join(", ")
-            : categoryToAdd;
-
-        setFormData({ ...formData, categories: updatedCategories });
-        console.log('Added Category:', categoryToAdd);
+    const handleAddCategory = (selectedName) => {
+        const selectedCat = categories.find((cat) => cat.name === selectedName);
+        if (selectedCat && !formData.categories.find(c => c.id === selectedCat.id)) {
+            setFormData((prev) => ({
+                ...prev,
+                categories: [...prev.categories, selectedCat]
+            }));
+        }
     };
+
+    const handlePhotoChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        setPhotos(selectedFiles);
+        if (selectedFiles.length > 0) {
+            setPhotoPreview(URL.createObjectURL(selectedFiles[0]));
+        }
+    };
+    const uploadPhotos = async (productId) => {
+        if (photos.length === 0) return [];
+
+        const form = new FormData();
+        form.append('product', productId);
+        photos.forEach((file) => {
+            form.append('image', file);
+        });
+        const response = await fetch('http://127.0.0.1:8000/api/photos/multi-upload/', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+            body: form
+        });
+
+        if (!response.ok) throw new Error('Photo upload failed');
+        const data = await response.json();
+        return data.photo_ids;
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            handleAddCategory();
+            const photoIds = await uploadPhotos(productId);
+
             const response = await fetch(`http://127.0.0.1:8000/api/products/${productId}/update/`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
                     ...formData,
-                    categories: formData.categories.split(",").map((c) => c.trim()),
-                    photos: formData.photos.split(",").map((p) => p.trim()),
+                    price: parseFloat(formData.price),
+                    categories: formData.categories.map(cat => cat.id),
+                    photos: photoIds,
                 }),
             });
+
             if (!response.ok) throw new Error(`Error: ${response.status}`);
             const data = await response.json();
             console.log("Product updated:", data);
@@ -85,6 +132,7 @@ const ProductEditForm = ({ productId, fetchProducts, setUpdateOk, categories }) 
             console.error("Error updating product:", error);
         }
     };
+
 
     if (!formData) return <p>No product selected</p>;
 
@@ -124,17 +172,17 @@ const ProductEditForm = ({ productId, fetchProducts, setUpdateOk, categories }) 
                         <select onChange={(e) => handleAddCategory(e.target.value)} value="" style={styles.dropDown}>
                             <option value="" disabled>Add Category</option>
                             {categories
-                                .filter(cat => !formData.categories.includes(cat.name)) // filter out selected
+                                .filter(cat => !formData.categories.find(c => c.id === cat.id))
                                 .map(cat => (
                                     <option key={cat.id} value={cat.name}>{cat.name}</option>
                                 ))}
                         </select>
                         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                            {formData.categories.split(',').map((category, index) => (
+                            {formData.categories.map((category, index) => (
                                 <div key={index} style={{ display: 'flex', padding: '0.25rem', margin: '0.25rem', backgroundColor: '#f0f0f0', borderRadius: '5px', fontSize: '.9rem', color: 'black', }}>
-                                    {category.trim()}
+                                    {category.name}
                                     <div style={{ marginLeft: '0.5rem', color: 'White', backgroundColor: 'red', padding: '0.05rem 0.3rem', borderRadius: '10%', cursor: 'pointer', alignContent: 'center', justifyContent: 'center', display: 'flex', alignItems: 'center', }}
-                                        onClick={() => handleCategoryDelete(category.trim())}
+                                        onClick={() => handleCategoryDelete(category.id)}
                                     >
                                         X
                                     </div>
@@ -143,26 +191,27 @@ const ProductEditForm = ({ productId, fetchProducts, setUpdateOk, categories }) 
                         </div>
                     </label>
                     <label style={styles.inputContainer}>
-                        Photos (comma-separated URLs):
+                        Upload New Photos:
                         <input
                             style={styles.inputBox}
-                            type="text"
-                            name="photos"
-                            value={formData.photos}
-                            onChange={handleInputChange}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handlePhotoChange}
                         />
                     </label>
+
                     <button style={styles.submitbutton} className="submitButton"
                         type="submit">Update Product</button>
                 </form>
             </div>
             <div className="rightImageSection" style={styles.rightImageSection}>
-                <img
-                    src={formData.photos.split(',')[0].trim()}
-                    alt={"Product Image Unavailable"}
-                    style={{ width: '100%', height: 'auto', margin: '1rem', objectFit: 'contain' }}
-
-                />
+                {photoPreview && (
+                    <img
+                        src={`http://127.0.0.1:8000${photoPreview}`}
+                        alt="Preview"
+                        style={{ width: '100%', height: 'auto', margin: '1rem', objectFit: 'contain' }}
+                    />)}
             </div>
         </div>
     );
